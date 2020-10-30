@@ -22,15 +22,7 @@ class ViewController: UIViewController {
     var cymbalPlayer = AVAudioPlayer()
 
     @IBAction func cymbal(_ sender: Any) {
-        do {
-            // シンバル用のプレイヤーに音源ファイル名を設定
-            cymbalPlayer = try AVAudioPlayer(contentsOf: cymbalPath, fileTypeHint: nil)
-        } catch {
-            print("シンバル再生でエラー")
-        }
-        
-        // シンバルの音源再生
-        cymbalPlayer.play()
+        soundPlayer(player: &cymbalPlayer, path:cymbalPath, count:0)
     }
     
     // ギターの音源ファイルを指定
@@ -40,15 +32,7 @@ class ViewController: UIViewController {
     var guitarPlayer = AVAudioPlayer()
 
     @IBAction func guitar(_ sender: Any) {
-        do {
-            // ギター用のプレイヤーに音源ファイル名を設定
-            guitarPlayer = try AVAudioPlayer(contentsOf: guitarPath, fileTypeHint: nil)
-        } catch {
-            print("ギター再生でエラー")
-        }
-        
-        // ギターの音源再生
-        guitarPlayer.play()
+        soundPlayer(player: &guitarPlayer, path:guitarPath, count:0)
     }
     
     // バックミュージックの音源ファイルを指定
@@ -58,23 +42,24 @@ class ViewController: UIViewController {
     var backmusicPlayer = AVAudioPlayer()
     
     @IBAction func play(_ sender: Any) {
-        do{
-            // バックミュージック用のプレイヤーに、音源ファイル名を指定
-            backmusicPlayer=try AVAudioPlayer(contentsOf: backmusicPath, fileTypeHint: nil)
-            
-            // リピート再生：-1
-            // 1を設定した場合は1回リピートされるため、計2回再生される
-            backmusicPlayer.numberOfLoops = -1
-            backmusicPlayer.play()
-        } catch{
-            print("バックミュージック再生時にエラーが発生しました！")
-        }
+        soundPlayer(player: &backmusicPlayer, path:backmusicPath, count:-1)
     }
     
     // stopボタンがタップされた時の処理
     @IBAction func stop(_ sender: Any) {
         // バックミュージック停止
         backmusicPlayer.stop()
+    }
+    
+    // 共通のプレイヤー再生処理
+    fileprivate func soundPlayer(player:inout AVAudioPlayer, path: URL, count:Int){
+        do {
+            player = try AVAudioPlayer(contentsOf: path, fileTypeHint: nil)
+            player.numberOfLoops = count
+            player.play()
+        } catch {
+            print("サウンド再生時にエラーが発生しました")
+        }
     }
 }
 
